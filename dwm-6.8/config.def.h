@@ -114,8 +114,8 @@ static const Key keys[] = {
 	{ 0,                            XF86XK_AudioRaiseVolume,spawn,          {.v = (const char*[]){ "wpctl", "set-volume", "@DEFAULT_SINK@", "5%+", NULL } } },
 #endif
 	{ MODKEY,                       XK_Scroll_Lock, spawn,     SHCMD("beep; systemctl poweroff") },
-	{ 0,                            XK_Print,  spawn,          SHCMD("maim | tee ~/Pictures/ScreenShots/$(date '+%y%m%d-%H%M-%S').png | xclip -selection clipboard -target image/png") },
-	{ MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("maim --select | tee ~/Pictures/ScreenShots/$(date '+%y%m%d-%H%M-%S').png | xclip -selection clipboard -target image/png") },
+	{ 0,                            XK_Print,  spawn,          SHCMD("maim | tee ~/Pictures/Screenshots/$(date '+%y%m%d-%H%M-%S').png | xclip -selection clipboard -target image/png") },
+	{ MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("maim --select | tee ~/Pictures/Screenshots/$(date '+%y%m%d-%H%M-%S').png | xclip -selection clipboard -target image/png") },
 	{ MODKEY,                       XK_Page_Down,spawn,        SHCMD("wpctl set-mute @DEFAULT_SOURCE@ 1 ; beep") },
 	{ MODKEY,                       XK_Page_Up,spawn,          SHCMD("wpctl set-mute @DEFAULT_SOURCE@ 0") },
 	//{ MODKEY,                       XK_Return, spawn,          SHCMD("") },
