@@ -1,10 +1,12 @@
+//#define LAPTOP
+#define BROWSER "firefox"
 /* appearance */
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "monospace:size=10" };
-static const char dmenufont[]       = "monospace:size=10";
+static const char *fonts[]          = { "monospace:size=16" };
+static const char dmenufont[]       = "monospace:size=16";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
@@ -25,8 +27,8 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "Firefox",  NULL,       NULL,       0             0,           -1 },
-	{ "Telegram", NULL,       NULL,       1 << 8        0,           -1 },
+	{ BROWSER,    NULL,       NULL,       0,            0,           -1 },
+	{ "Telegram", NULL,       NULL,       1 << 8,       0,           -1 },
 };
 
 /* layout(s) */
@@ -66,11 +68,11 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
-	{ MODKEY|ShiftMask              XK_h,      incnmaster,     {.i = +1 } },
-	{ MODKEY|ShiftMask              XK_l,      incnmaster,     {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_h,      incnmaster,     {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_l,      incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
-	{ MODKEY|ShiftMask              XK_Return, zoom,           {0} },
+	{ MODKEY|ShiftMask,             XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY,                       XK_q,      killclient,     {0} },
 	//{ Mod1Mask,                     XK_F4,      killclient,     {0} },
@@ -95,6 +97,27 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_c,      quit,           {0} },
+/* my custom binds */
+	{ MODKEY,                       XK_Scroll_Lock, spawn,     SHCMD("beep; systemctl poweroff") },
+	{ ControlMask,                  XK_Pause,  spawn,          SHCMD("sleep 0.2 && systemctl suspend") },
+	{ 0,                            XK_Print,  spawn,          SHCMD("maim | tee ~/Pictures/ScreenShots/$(date '+%y%m%d-%H%M-%S').png | xclip -selection clipboard -target image/png") },
+	{ MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("maim --select | tee ~/Pictures/ScreenShots/$(date '+%y%m%d-%H%M-%S').png | xclip -selection clipboard -target image/png") },
+	{ MODKEY,                       XK_Page_Down,spawn,        SHCMD("wpctl set-mute @DEFAULT_SOURCE@ 1 ; beep") },
+	{ MODKEY,                       XK_Page_Up,spawn,          SHCMD("wpctl set-mute @DEFAULT_SOURCE@ 0") },
+	//{ MODKEY,                       XK_Return, spawn,          SHCMD("") },
+	{ MODKEY,                       XK_F1,     spawn,          {.v = (const char*[]){ BROWSER, "--new-window", NULL } } },
+	{ MODKEY,                       XK_F2,     spawn,          {.v = (const char *[]){ BROWSER, "--new-window", "https://dl.nure.ua/my/courses.php", "https://gemini.google.com/app", NULL } } },
+	{ MODKEY,                       XK_F3,     spawn,          {.v = (const char*[]){ "Telegram", NULL } } },
+	{ MODKEY,                       XK_F4,     spawn,          {.v = (const char *[]){ BROWSER, "--new-tab", "https://cist.nure.ua/ias/app/tt/f?p=778:2:2502439617492007::NO:::#", NULL } } },
+	{ MODKEY,                       XK_e,      spawn,          {.v = (const char*[]){ "Thunar", NULL } } },
+	{ MODKEY|ShiftMask,             XK_p,      spawn,          {.v = (const char *[]){ "xrandr", "--output", "HDMI-A-0", "--mode", "1920x1080", "--rate", "100", "--output", "DisplayPort-0", "--mode", "1440x900", "--rate", "74.98", "--left-of", "HDMI-A-0",  NULL } } },
+	{ MODKEY,                       XK_p,      spawn,          {.v = (const char *[]){ "xrandr", "--output", "DisplayPort-0", "--off", "--output", "HDMI-A-0", "--mode", "1920x1080", "--rate", "100", NULL } } },
+	{ MODKEY,                       XK_Escape, spawn,          {.v = (const char*[]){ "setxkbmap", "-layout", "us,ru", "-option", "grp:caps_toggle",  NULL } } },
+	{ MODKEY|ShiftMask,             XK_Escape, spawn,          {.v = (const char*[]){ "setxkbmap", "-layout", "us,ua", "-option", "grp:caps_toggle",  NULL } } },
+	{ MODKEY,                       XK_End,    spawn,          {.v = (const char*[]){ "wpctl", "set-mute", "@DEFAULT_SINK@", "toggle", NULL } } },
+	{ MODKEY,                       XK_minus,  spawn,          {.v = (const char*[]){ "wpctl", "set-volume", "@DEFAULT_SINK@", "5%-", NULL } } },
+	{ MODKEY,                       XK_equal,  spawn,          {.v = (const char*[]){ "wpctl", "set-volume", "@DEFAULT_SINK@", "5%+", NULL } } },
+/* end of custom binds */
 };
 
 /* button definitions */
@@ -113,4 +136,3 @@ static const Button buttons[] = {
 	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
 };
-
