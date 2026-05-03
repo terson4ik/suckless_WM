@@ -1,7 +1,11 @@
-/* See LICENSE file for copyright and license details. */
-
+#define VOLUME
+//#define LAPTOP
 /* interval between updates (in ms) */
+#ifdef LAPTOP
+const unsigned int interval = 5000;
+#else
 const unsigned int interval = 1000;
+#endif
 
 /* text to show if no value can be retrieved */
 static const char unknown_str[] = "n/a";
@@ -66,5 +70,14 @@ static const char unknown_str[] = "n/a";
  */
 static const struct arg args[] = {
 	/* function format          argument */
-	{ datetime, "%s",           "%F %T" },
+#ifdef LAPTOP
+    { battery_perc,  " %s%% ", "BAT0" },
+#else
+    #ifdef VOLUME
+    { run_command, " Vol: %s%% ", "pamixer --get-volume" },
+    #endif
+ // or use instead of pamixer: wpctl get-volume @DEFAULT_SINK@ | sed 's/Volume: //' | sed 's/0.//'
+#endif
+    { keymap,      "| %s |",       NULL    },
+	{ datetime,    "%s",           "%F %T" },
 };
