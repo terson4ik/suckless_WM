@@ -10,6 +10,8 @@ done;
     mv .xinitrc ~/.xinitrc
     mv .Xresources ~/.Xresources
 echo 'ready.'
+echo 'please, create the dir'
+echo 'mkdir -p ~/Pictures/Screenshots'
 echo 'if you need, please, compile the "bell.c" and add prog in you PATH.'
 echo 'run:'
 echo 'gcc bell.c -o bell'

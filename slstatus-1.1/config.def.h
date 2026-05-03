@@ -1,5 +1,6 @@
 #define VOLUME
 //#define LAPTOP
+
 /* interval between updates (in ms) */
 #ifdef LAPTOP
 const unsigned int interval = 5000;
@@ -79,5 +80,8 @@ static const struct arg args[] = {
  // or use instead of pamixer: wpctl get-volume @DEFAULT_SINK@ | sed 's/Volume: //' | sed 's/0.//'
 #endif
     { keymap,      "| %s |",       NULL    },
+#ifdef LAPTOP
+	{ datetime,    "%s",           "%F %H:%M" },
+#else
 	{ datetime,    "%s",           "%F %T" },
 };
