@@ -1,4 +1,5 @@
 //#define LAPTOP
+//#define scrot
 #define BROWSER "firefox"
 #ifdef LAPTOP
     #include <X11/XF86keysym.h>
@@ -31,7 +32,7 @@ static const Rule rules[] = {
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
 	{ BROWSER,    NULL,       NULL,       0,            0,           -1 },
-	{ "Telegram", NULL,       NULL,       1 << 8,       0,           -1 },
+	{ "Telegram", NULL,       NULL,       1 << 2,       0,           -1 },
 };
 
 /* layout(s) */
@@ -114,8 +115,13 @@ static const Key keys[] = {
 	{ 0,                            XF86XK_AudioRaiseVolume,spawn,          {.v = (const char*[]){ "wpctl", "set-volume", "@DEFAULT_SINK@", "5%+", NULL } } },
 #endif
 	{ MODKEY,                       XK_Scroll_Lock, spawn,     SHCMD("beep; systemctl poweroff") },
+#ifdef scrot
+	{ 0,                            XK_Print,  spawn,          SHCMD("scrot -f '/home/terson/Pictures/Screenshots/%Y-%m-%d_%H%M%S.png' -e 'xclip -selection clipboard -t image/png -i $f'") },
+	{ MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("scrot -fs '/home/terson/Pictures/Screenshots/%Y-%m-%d_%H%M%S.png' -e 'xclip -selection clipboard -t image/png -i $f'") },
+#else
 	{ 0,                            XK_Print,  spawn,          SHCMD("maim | tee ~/Pictures/Screenshots/$(date '+%y%m%d-%H%M-%S').png | xclip -selection clipboard -target image/png") },
 	{ MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("maim --select | tee ~/Pictures/Screenshots/$(date '+%y%m%d-%H%M-%S').png | xclip -selection clipboard -target image/png") },
+#endif
 	{ MODKEY,                       XK_Page_Down,spawn,        SHCMD("wpctl set-mute @DEFAULT_SOURCE@ 1 ; beep") },
 	{ MODKEY,                       XK_Page_Up,spawn,          SHCMD("wpctl set-mute @DEFAULT_SOURCE@ 0") },
 	//{ MODKEY,                       XK_Return, spawn,          SHCMD("") },
