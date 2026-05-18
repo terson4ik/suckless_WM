@@ -1,8 +1,8 @@
-//#define LAPTOP
-//#define SCROT
+/*
+#define LAPTOP
+#define SCROT
+*/
 #define TERM         "alacritty"
-#define BROWSER      "firefox"
-#define EXPLORER     "Thunar"
 #define READER       "okular"
 #define MAIN_NOTEPAD "geany"
 #define OTHR_NOTEPAD "notepadnext"
@@ -11,6 +11,7 @@
 #ifdef LAPTOP
     #include <X11/XF86keysym.h>
 #endif
+
 /* appearance */
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
@@ -111,19 +112,19 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_c,      quit,           {0} },
 
 /* my custom binds */
-	{ MODKEY,                       XK_e,      spawn,          {.v = (const char*[]){ EXPLORER, NULL } } },
+	{ MODKEY,                       XK_e,     spawn,           SHCMD("$EXPLORER") },
 	{ MODKEY,                       XK_Escape, spawn,          {.v = (const char*[]){ "setxkbmap", "-layout", "us,ru", "-option", "grp:caps_toggle",  NULL } } },
 	{ MODKEY|ShiftMask,             XK_Escape, spawn,          {.v = (const char*[]){ "setxkbmap", "-layout", "us,ua", "-option", "grp:caps_toggle",  NULL } } },
 	{ MODKEY,                       XK_End,    spawn,          {.v = (const char*[]){ "wpctl", "set-mute", "@DEFAULT_SINK@", "toggle", NULL } } },
 	{ MODKEY,                       XK_minus,  spawn,          {.v = (const char*[]){ "wpctl", "set-volume", "@DEFAULT_SINK@", "5%-", NULL } } },
 	{ MODKEY,                       XK_equal,  spawn,          {.v = (const char*[]){ "wpctl", "set-volume", "@DEFAULT_SINK@", "5%+", NULL } } },
-	{ MODKEY,                       XK_F1,     spawn,          {.v = (const char*[]){ BROWSER, "--new-window", "https://dl.nure.ua/my/courses.php", NULL } } },
-	{ MODKEY,                       XK_F2,     spawn,          {.v = (const char*[]){ BROWSER, "--new-window", NULL } } },
+	{ MODKEY,                       XK_F1,     spawn,          {.v = (const char*[]){ "curses.sh", NULL } } },
+	{ MODKEY,                       XK_F2,     spawn,          SHCMD("$BROWSER --new-window") },
 	{ MODKEY,                       XK_F3,     spawn,          {.v = (const char*[]){ "Telegram", NULL } } },
 	{ MODKEY,                       XK_F4,     spawn,          {.v = (const char*[]){ MAIN_NOTEPAD, NULL } } },
     { MODKEY,                       XK_F5,     spawn,          {.v = (const char*[]){ "code", NULL } } },
-	{ MODKEY,                       XK_Scroll_Lock, spawn,     SHCMD("beep; systemctl poweroff") },
-	{ MODKEY,                       XK_Page_Down, spawn,       SHCMD("wpctl set-mute @DEFAULT_SOURCE@ 1 ; beep") },
+	{ MODKEY,                       XK_Scroll_Lock, spawn,     SHCMD("bell; systemctl poweroff") },
+	{ MODKEY,                       XK_Page_Down, spawn,       SHCMD("wpctl set-mute @DEFAULT_SOURCE@ 1 ; bell") },
 	{ MODKEY,                       XK_Page_Up,spawn,          SHCMD("wpctl set-mute @DEFAULT_SOURCE@ 0") },
     /* optional */
 #ifdef LAPTOP
@@ -131,8 +132,8 @@ static const Key keys[] = {
 	{ 0,                            XF86XK_AudioLowerVolume,spawn, {.v = (const char*[]){ "wpctl", "set-volume", "@DEFAULT_SINK@", "5%-", NULL } } },
 	{ 0,                            XF86XK_AudioRaiseVolume,spawn, {.v = (const char*[]){ "wpctl", "set-volume", "@DEFAULT_SINK@", "5%+", NULL } } },
 #else
-	{ MODKEY|ShiftMask,             XK_p,      spawn,          {.v = (const char *[]){ "xrandr", "--output", "HDMI-A-0", "--mode", "1920x1080", "--rate", "100", "--output", "DisplayPort-0", "--mode", "1440x900", "--rate", "74.98", "--left-of", "HDMI-A-0",  NULL } } },
-	{ MODKEY,                       XK_p,      spawn,          {.v = (const char *[]){ "xrandr", "--output", "DisplayPort-0", "--off", "--output", "HDMI-A-0", "--mode", "1920x1080", "--rate", "100", NULL } } },
+	{ MODKEY|ShiftMask,             XK_p,      spawn,          {.v = (const char *[]){ "SECONDARY_monitors.sh",  NULL } } },
+	{ MODKEY,                       XK_p,      spawn,          {.v = (const char *[]){ "MAIN_monitor.sh", NULL } } },
 	{ ControlMask,                  XK_Scroll_Lock,spawn,      SHCMD("sleep 0.2 && systemctl suspend") },
 #endif
 #ifdef PAINT
@@ -148,8 +149,8 @@ static const Key keys[] = {
     { ControlMask,                  XK_Pause,  spawn,          {.v = (const char*[]){ MIXER, NULL } } },
 #endif
 #ifdef SCROT
-	{ 0,                            XK_Print,  spawn,          SHCMD("scrot -f '/home/terson/Pictures/Screenshots/%Y-%m-%d_%H%M%S.png' -e 'xclip -selection clipboard -t image/png -i $f'") },
-	{ MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("scrot -fs '/home/terson/Pictures/Screenshots/%Y-%m-%d_%H%M%S.png' -e 'xclip -selection clipboard -t image/png -i $f'") },
+	{ 0,                            XK_Print,  spawn,          SHCMD("scrot -f  '~/Pictures/Screenshots/%Y-%m-%d_%H%M%S.png' -e 'xclip -selection clipboard -t image/png -i $f'") },
+	{ MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("scrot -fs '~/Pictures/Screenshots/%Y-%m-%d_%H%M%S.png' -e 'xclip -selection clipboard -t image/png -i $f'") },
 #else
 	{ 0,                            XK_Print,  spawn,          SHCMD("maim | tee ~/Pictures/Screenshots/$(date '+%y%m%d-%H%M-%S').png | xclip -selection clipboard -target image/png") },
 	{ MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("maim --select | tee ~/Pictures/Screenshots/$(date '+%y%m%d-%H%M-%S').png | xclip -selection clipboard -target image/png") },
