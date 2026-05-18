@@ -84,4 +84,5 @@ static const struct arg args[] = {
 	{ datetime,    "%s",           "%F %H:%M" },
 #else
 	{ datetime,    "%s",           "%F %T" },
+#endif
 };
