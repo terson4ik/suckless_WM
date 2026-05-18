@@ -3,8 +3,8 @@
 #define SCROT
 */
 #define TERM         "alacritty"
-#define READER       "okular"
 #define MAIN_NOTEPAD "geany"
+#define READER       "okular"
 #define OTHR_NOTEPAD "notepadnext"
 #define PAINT        "kolourpaint"
 #define MIXER        "pavucontrol"
@@ -130,7 +130,7 @@ static const Key keys[] = {
 	{ 0,                            XF86XK_AudioMute,       spawn, {.v = (const char*[]){ "wpctl", "set-mute", "@DEFAULT_SINK@", "toggle", NULL } } },
 	{ 0,                            XF86XK_AudioLowerVolume,spawn, {.v = (const char*[]){ "wpctl", "set-volume", "@DEFAULT_SINK@", "5%-", NULL } } },
 	{ 0,                            XF86XK_AudioRaiseVolume,spawn, {.v = (const char*[]){ "wpctl", "set-volume", "@DEFAULT_SINK@", "5%+", NULL } } },
-	{ ControlMask,                  XK_Page_Up,             spawn,     SHCMD("sudo systemctl poweroff") },
+	{ ControlMask,                  XK_Page_Up,             spawn, SHCMD("sudo poweroff") },
 #else
 	{ MODKEY|ShiftMask,             XK_p,      spawn,          {.v = (const char *[]){ "SECONDARY_monitors.sh",  NULL } } },
 	{ MODKEY,                       XK_p,      spawn,          {.v = (const char *[]){ "MAIN_monitor.sh", NULL } } },
