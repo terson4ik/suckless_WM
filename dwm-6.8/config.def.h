@@ -123,7 +123,6 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_F3,     spawn,          {.v = (const char*[]){ "Telegram", NULL } } },
 	{ MODKEY,                       XK_F4,     spawn,          {.v = (const char*[]){ MAIN_NOTEPAD, NULL } } },
     { MODKEY,                       XK_F5,     spawn,          {.v = (const char*[]){ "code", NULL } } },
-	{ MODKEY,                       XK_Scroll_Lock, spawn,     SHCMD("bell; systemctl poweroff") },
 	{ MODKEY,                       XK_Page_Down, spawn,       SHCMD("wpctl set-mute @DEFAULT_SOURCE@ 1 ; bell") },
 	{ MODKEY,                       XK_Page_Up,spawn,          SHCMD("wpctl set-mute @DEFAULT_SOURCE@ 0") },
     /* optional */
@@ -131,10 +130,12 @@ static const Key keys[] = {
 	{ 0,                            XF86XK_AudioMute,       spawn, {.v = (const char*[]){ "wpctl", "set-mute", "@DEFAULT_SINK@", "toggle", NULL } } },
 	{ 0,                            XF86XK_AudioLowerVolume,spawn, {.v = (const char*[]){ "wpctl", "set-volume", "@DEFAULT_SINK@", "5%-", NULL } } },
 	{ 0,                            XF86XK_AudioRaiseVolume,spawn, {.v = (const char*[]){ "wpctl", "set-volume", "@DEFAULT_SINK@", "5%+", NULL } } },
+	{ ControlMask,                  XK_Page_Up,             spawn,     SHCMD("sudo systemctl poweroff") },
 #else
 	{ MODKEY|ShiftMask,             XK_p,      spawn,          {.v = (const char *[]){ "SECONDARY_monitors.sh",  NULL } } },
 	{ MODKEY,                       XK_p,      spawn,          {.v = (const char *[]){ "MAIN_monitor.sh", NULL } } },
 	{ ControlMask,                  XK_Scroll_Lock,spawn,      SHCMD("sleep 0.2 && systemctl suspend") },
+	{ MODKEY,                       XK_Scroll_Lock, spawn,     SHCMD("bell; systemctl poweroff") },
 #endif
 #ifdef PAINT
     { MODKEY,                       XK_F8,     spawn,          {.v = (const char*[]){ PAINT, NULL } } },
