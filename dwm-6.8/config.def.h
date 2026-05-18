@@ -1,6 +1,13 @@
 //#define LAPTOP
-//#define scrot
-#define BROWSER "firefox"
+//#define SCROT
+#define TERM         "alacritty"
+#define BROWSER      "firefox"
+#define EXPLORER     "Thunar"
+#define READER       "okular"
+#define MAIN_NOTEPAD "geany"
+#define OTHR_NOTEPAD "notepadnext"
+#define PAINT        "kolourpaint"
+#define MIXER        "pavucontrol"
 #ifdef LAPTOP
     #include <X11/XF86keysym.h>
 #endif
@@ -31,8 +38,10 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
-	{ BROWSER,    NULL,       NULL,       0,            0,           -1 },
 	{ "Telegram", NULL,       NULL,       1 << 2,       0,           -1 },
+    /* no reason in tags mask '0' for browser
+	{ BROWSER,    NULL,       NULL,       0,            0,           -1 },
+    */
 };
 
 /* layout(s) */
@@ -63,7 +72,7 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *termcmd[]  = { "alacritty", NULL };
+static const char *termcmd[]  = { TERM, NULL };
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -79,7 +88,6 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY,                       XK_q,      killclient,     {0} },
-	//{ Mod1Mask,                     XK_F4,      killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
@@ -101,38 +109,51 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_c,      quit,           {0} },
+
 /* my custom binds */
+	{ MODKEY,                       XK_e,      spawn,          {.v = (const char*[]){ EXPLORER, NULL } } },
+	{ MODKEY,                       XK_Escape, spawn,          {.v = (const char*[]){ "setxkbmap", "-layout", "us,ru", "-option", "grp:caps_toggle",  NULL } } },
+	{ MODKEY|ShiftMask,             XK_Escape, spawn,          {.v = (const char*[]){ "setxkbmap", "-layout", "us,ua", "-option", "grp:caps_toggle",  NULL } } },
 	{ MODKEY,                       XK_End,    spawn,          {.v = (const char*[]){ "wpctl", "set-mute", "@DEFAULT_SINK@", "toggle", NULL } } },
 	{ MODKEY,                       XK_minus,  spawn,          {.v = (const char*[]){ "wpctl", "set-volume", "@DEFAULT_SINK@", "5%-", NULL } } },
 	{ MODKEY,                       XK_equal,  spawn,          {.v = (const char*[]){ "wpctl", "set-volume", "@DEFAULT_SINK@", "5%+", NULL } } },
-#ifndef LAPTOP
+	{ MODKEY,                       XK_F1,     spawn,          {.v = (const char*[]){ BROWSER, "--new-window", "https://dl.nure.ua/my/courses.php", NULL } } },
+	{ MODKEY,                       XK_F2,     spawn,          {.v = (const char*[]){ BROWSER, "--new-window", NULL } } },
+	{ MODKEY,                       XK_F3,     spawn,          {.v = (const char*[]){ "Telegram", NULL } } },
+	{ MODKEY,                       XK_F4,     spawn,          {.v = (const char*[]){ MAIN_NOTEPAD, NULL } } },
+    { MODKEY,                       XK_F5,     spawn,          {.v = (const char*[]){ "code", NULL } } },
+	{ MODKEY,                       XK_Scroll_Lock, spawn,     SHCMD("beep; systemctl poweroff") },
+	{ MODKEY,                       XK_Page_Down, spawn,       SHCMD("wpctl set-mute @DEFAULT_SOURCE@ 1 ; beep") },
+	{ MODKEY,                       XK_Page_Up,spawn,          SHCMD("wpctl set-mute @DEFAULT_SOURCE@ 0") },
+    /* optional */
+#ifdef LAPTOP
+	{ 0,                            XF86XK_AudioMute,       spawn, {.v = (const char*[]){ "wpctl", "set-mute", "@DEFAULT_SINK@", "toggle", NULL } } },
+	{ 0,                            XF86XK_AudioLowerVolume,spawn, {.v = (const char*[]){ "wpctl", "set-volume", "@DEFAULT_SINK@", "5%-", NULL } } },
+	{ 0,                            XF86XK_AudioRaiseVolume,spawn, {.v = (const char*[]){ "wpctl", "set-volume", "@DEFAULT_SINK@", "5%+", NULL } } },
+#else
 	{ MODKEY|ShiftMask,             XK_p,      spawn,          {.v = (const char *[]){ "xrandr", "--output", "HDMI-A-0", "--mode", "1920x1080", "--rate", "100", "--output", "DisplayPort-0", "--mode", "1440x900", "--rate", "74.98", "--left-of", "HDMI-A-0",  NULL } } },
 	{ MODKEY,                       XK_p,      spawn,          {.v = (const char *[]){ "xrandr", "--output", "DisplayPort-0", "--off", "--output", "HDMI-A-0", "--mode", "1920x1080", "--rate", "100", NULL } } },
-	{ ControlMask,                  XK_Pause,  spawn,          SHCMD("sleep 0.2 && systemctl suspend") },
-#else
-	{ 0,                            XF86XK_AudioMute,       spawn,          {.v = (const char*[]){ "wpctl", "set-mute", "@DEFAULT_SINK@", "toggle", NULL } } },
-	{ 0,                            XF86XK_AudioLowerVolume,spawn,          {.v = (const char*[]){ "wpctl", "set-volume", "@DEFAULT_SINK@", "5%-", NULL } } },
-	{ 0,                            XF86XK_AudioRaiseVolume,spawn,          {.v = (const char*[]){ "wpctl", "set-volume", "@DEFAULT_SINK@", "5%+", NULL } } },
+	{ ControlMask,                  XK_Scroll_Lock,spawn,      SHCMD("sleep 0.2 && systemctl suspend") },
 #endif
-	{ MODKEY,                       XK_Scroll_Lock, spawn,     SHCMD("beep; systemctl poweroff") },
-#ifdef scrot
+#ifdef PAINT
+    { MODKEY,                       XK_F8,     spawn,          {.v = (const char*[]){ PAINT, NULL } } },
+#endif
+#ifdef OTHR_NOTEPAD
+    { MODKEY,                       XK_F6,     spawn,          {.v = (const char*[]){ OTHR_NOTEPAD, NULL } } },
+#endif
+#ifdef READER
+	{ 0,                            XK_Pause,  spawn,          {.v = (const char*[]){ READER, NULL } } },
+#endif
+#ifdef MIXER
+    { ControlMask,                  XK_Pause,  spawn,          {.v = (const char*[]){ MIXER, NULL } } },
+#endif
+#ifdef SCROT
 	{ 0,                            XK_Print,  spawn,          SHCMD("scrot -f '/home/terson/Pictures/Screenshots/%Y-%m-%d_%H%M%S.png' -e 'xclip -selection clipboard -t image/png -i $f'") },
 	{ MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("scrot -fs '/home/terson/Pictures/Screenshots/%Y-%m-%d_%H%M%S.png' -e 'xclip -selection clipboard -t image/png -i $f'") },
 #else
 	{ 0,                            XK_Print,  spawn,          SHCMD("maim | tee ~/Pictures/Screenshots/$(date '+%y%m%d-%H%M-%S').png | xclip -selection clipboard -target image/png") },
 	{ MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("maim --select | tee ~/Pictures/Screenshots/$(date '+%y%m%d-%H%M-%S').png | xclip -selection clipboard -target image/png") },
 #endif
-	{ MODKEY,                       XK_Page_Down,spawn,        SHCMD("wpctl set-mute @DEFAULT_SOURCE@ 1 ; beep") },
-	{ MODKEY,                       XK_Page_Up,spawn,          SHCMD("wpctl set-mute @DEFAULT_SOURCE@ 0") },
-	//{ MODKEY,                       XK_Return, spawn,          SHCMD("") },
-	{ MODKEY,                       XK_F1,     spawn,          {.v = (const char*[]){ BROWSER, "--new-window", NULL } } },
-	{ MODKEY,                       XK_F2,     spawn,          {.v = (const char *[]){ BROWSER, "--new-window", "https://dl.nure.ua/my/courses.php", "https://gemini.google.com/app", NULL } } },
-	{ MODKEY,                       XK_F3,     spawn,          {.v = (const char*[]){ "Telegram", NULL } } },
-	{ MODKEY,                       XK_F4,     spawn,          {.v = (const char *[]){ BROWSER, "--new-tab", "https://cist.nure.ua/ias/app/tt/f?p=778:2:2502439617492007::NO:::#", NULL } } },
-	{ MODKEY,                       XK_e,      spawn,          {.v = (const char*[]){ "Thunar", NULL } } },
-	{ MODKEY,                       XK_Escape, spawn,          {.v = (const char*[]){ "setxkbmap", "-layout", "us,ru", "-option", "grp:caps_toggle",  NULL } } },
-	{ MODKEY|ShiftMask,             XK_Escape, spawn,          {.v = (const char*[]){ "setxkbmap", "-layout", "us,ua", "-option", "grp:caps_toggle",  NULL } } },
-/* end of custom binds */
 };
 
 /* button definitions */
