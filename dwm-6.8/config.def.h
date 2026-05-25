@@ -3,11 +3,14 @@
 #define SCROT
 */
 #define TERM         "alacritty"
+#define PRIMARYMSG   "Telegram"
+//#define SECMSG       "Telegram"
 #define MAIN_NOTEPAD "geany"
 #define READER       "okular"
 #define OTHR_NOTEPAD "notepadnext"
 #define PAINT        "kolourpaint"
 #define MIXER        "pavucontrol"
+
 #ifdef LAPTOP
     #include <X11/XF86keysym.h>
 #endif
@@ -39,7 +42,10 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "Telegram", NULL,       NULL,       1 << 2,       0,           -1 },
+	{ PRIMARYMSG, NULL,       NULL,       1 << 2,       0,           -1 },
+#ifdef SECMSG
+	{ SECMSG,     NULL,       NULL,       1 << 8,       0,           -1 },
+#endif
     /* no reason in tags mask '0' for browser
 	{ BROWSER,    NULL,       NULL,       0,            0,           -1 },
     */
@@ -74,6 +80,7 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { TERM, NULL };
+static const char *taskcmd[]  = { TERM, "-e", "top", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -112,15 +119,16 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_c,      quit,           {0} },
 
 /* my custom binds */
-	{ MODKEY,                       XK_e,     spawn,           SHCMD("$EXPLORER") },
-	{ MODKEY,                       XK_Escape, spawn,          {.v = (const char*[]){ "setxkbmap", "-layout", "us,ru", "-option", "grp:caps_toggle",  NULL } } },
-	{ MODKEY|ShiftMask,             XK_Escape, spawn,          {.v = (const char*[]){ "setxkbmap", "-layout", "us,ua", "-option", "grp:caps_toggle",  NULL } } },
+	{ MODKEY,                       XK_e,      spawn,          SHCMD("$EXPLORER") },
+	{ MODKEY,                       XK_grave,  spawn,          {.v = (const char*[]){ "setxkbmap", "-layout", "us,ru", "-option", "grp:caps_toggle",  NULL } } },
+	{ MODKEY|ShiftMask,             XK_grave,  spawn,          {.v = (const char*[]){ "setxkbmap", "-layout", "us,ua", "-option", "grp:caps_toggle",  NULL } } },
+	{ MODKEY,                       XK_Escape, spawn,          {.v = taskcmd } },
 	{ MODKEY,                       XK_End,    spawn,          {.v = (const char*[]){ "wpctl", "set-mute", "@DEFAULT_SINK@", "toggle", NULL } } },
 	{ MODKEY,                       XK_minus,  spawn,          {.v = (const char*[]){ "wpctl", "set-volume", "@DEFAULT_SINK@", "5%-", NULL } } },
 	{ MODKEY,                       XK_equal,  spawn,          {.v = (const char*[]){ "wpctl", "set-volume", "@DEFAULT_SINK@", "5%+", NULL } } },
 	{ MODKEY,                       XK_F1,     spawn,          {.v = (const char*[]){ "curses.sh", NULL } } },
 	{ MODKEY,                       XK_F2,     spawn,          SHCMD("$BROWSER --new-window") },
-	{ MODKEY,                       XK_F3,     spawn,          {.v = (const char*[]){ "Telegram", NULL } } },
+	{ MODKEY,                       XK_F3,     spawn,          {.v = (const char*[]){ PRIMARYMSG, NULL } } },
 	{ MODKEY,                       XK_F4,     spawn,          {.v = (const char*[]){ MAIN_NOTEPAD, NULL } } },
     { MODKEY,                       XK_F5,     spawn,          {.v = (const char*[]){ "code", NULL } } },
 	{ MODKEY,                       XK_Page_Down, spawn,       SHCMD("wpctl set-mute @DEFAULT_SOURCE@ 1 ; bell") },
@@ -136,6 +144,9 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_p,      spawn,          {.v = (const char *[]){ "MAIN_monitor.sh", NULL } } },
 	{ ControlMask,                  XK_Scroll_Lock,spawn,      SHCMD("sleep 0.2 && systemctl suspend") },
 	{ MODKEY,                       XK_Scroll_Lock, spawn,     SHCMD("bell; systemctl poweroff") },
+#endif
+#ifdef SECMSG
+    { MODKEY,                       XK_F7,     spawn,          {.v = (const char*[]){ SECMSG, NULL } } },
 #endif
 #ifdef PAINT
     { MODKEY,                       XK_F8,     spawn,          {.v = (const char*[]){ PAINT, NULL } } },
