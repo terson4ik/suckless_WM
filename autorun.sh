@@ -13,9 +13,10 @@ mkdir -p ~/Pictures/Screenshots
 echo "mkdir ~/.local/bin/"
 mkdir ~/.local/bin/
 mv extra_scripts/* ~/.local/bin/
+echo 'compile the "bell.c"'
+gcc bell.c -o bell
+
 echo "we added some scripts in ~/.local/bin/"
 echo "well, setting your PATH please"
-echo 'if you need, please, compile the "bell.c" and add prog in you PATH.'
 echo 'run:'
-echo 'gcc bell.c -o bell'
 echo 'mv bell ~/.local/bin/'
