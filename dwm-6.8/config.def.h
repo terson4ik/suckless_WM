@@ -164,11 +164,11 @@ static const Key keys[] = {
 	{ 0,                            XK_Print,  spawn,          SHCMD("scrot -f  '~/Pictures/Screenshots/%Y-%m-%d_%H%M%S.png' -e 'xclip -selection clipboard -t image/png -i $f'") },
 	{ MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("scrot -fs '~/Pictures/Screenshots/%Y-%m-%d_%H%M%S.png' -e 'xclip -selection clipboard -t image/png -i $f'") },
 
-	{ Mod4Mask|ShiftMask,           XK_s,      spawn,          SHCMD("scrot -fs '~/Pictures/%Y-%m-%d_%H%M%S.png' -e 'xclip -selection clipboard -t image/png -i $f'") },
+	{ Mod1Mask|ShiftMask,           XK_s,      spawn,          SHCMD("scrot -fs '~/Pictures/%Y-%m-%d_%H%M%S.png' -e 'xclip -selection clipboard -t image/png -i $f'") },
 #else
 	{ 0,                            XK_Print,  spawn,          SHCMD("maim | tee ~/Pictures/Screenshots/$(date '+%y%m%d-%H%M-%S').png | xclip -selection clipboard -target image/png") },
 	{ MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("maim --select | tee ~/Pictures/Screenshots/$(date '+%y%m%d-%H%M-%S').png | xclip -selection clipboard -target image/png") },
-	{ Mod4Mask|ShiftMask,           XK_s,      spawn,          SHCMD("maim --select | tee ~/Pictures/$(date '+%y%m%d-%H%M-%S').png | xclip -selection clipboard -target image/png") },
+	{ Mod1Mask|ShiftMask,           XK_s,      spawn,          SHCMD("maim --select | tee ~/Pictures/$(date '+%y%m%d-%H%M-%S').png | xclip -selection clipboard -target image/png") },
 #endif
 };
 
